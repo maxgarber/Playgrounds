@@ -3,13 +3,13 @@ import Cocoa
 import Foundation
 
 
-public protocol OutlineViewItem ***REMOVED***
-	var name: String ***REMOVED*** get ***REMOVED***
-	var image: NSImage? ***REMOVED*** get ***REMOVED***
-	var children: [OutlineViewItem] ***REMOVED*** get ***REMOVED***
-***REMOVED***
+public protocol OutlineViewItem {
+	var name: String { get }
+	var image: NSImage? { get }
+	var children: [OutlineViewItem] { get }
+}
 
 
-public protocol OutlineViewController: NSOutlineViewDataSource, NSOutlineViewDelegate ***REMOVED***
-	var items: [OutlineViewItem] ***REMOVED*** get ***REMOVED***
-***REMOVED***
+public protocol OutlineViewController: NSOutlineViewDataSource, NSOutlineViewDelegate {
+	var items: [OutlineViewItem] { get }
+}

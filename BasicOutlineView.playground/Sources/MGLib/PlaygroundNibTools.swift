@@ -12,41 +12,41 @@ import PlaygroundSupport
 /// - Parameter nibName: The name of a .xib file (minus the extension) in the "main bundle"
 /// - Parameter controller: The controller to manage the nib's contents (must be an NSViewController/subclass)
 /// - Returns: A boolean which is true on success, false otherwise
-public func loadViewFromNib (_ nibName: String, withOwner controller: NSViewController) -> Bool ***REMOVED***
+public func loadViewFromNib (_ nibName: String, withOwner controller: NSViewController) -> Bool {
 	var topLevelObjects: NSArray?
-	if (Bundle.main.loadNibNamed(NSNib.Name(nibName), owner: controller, topLevelObjects: &topLevelObjects)) ***REMOVED***
-		if let views = ((topLevelObjects as? [Any])?.filter(***REMOVED***$0 is NSView***REMOVED***) as? [NSView]), views.count > 0 ***REMOVED***
+	if (Bundle.main.loadNibNamed(NSNib.Name(nibName), owner: controller, topLevelObjects: &topLevelObjects)) {
+		if let views = ((topLevelObjects as? [Any])?.filter({$0 is NSView}) as? [NSView]), views.count > 0 {
 			controller.view = views[0]
 			return true
-		***REMOVED***
-	***REMOVED***
+		}
+	}
 	return false
-***REMOVED***
+}
 
 
 /// Loads a nib and its objects with the given controller/owner:
 /// - Parameter nibName: The name of a .xib file (minus the extension) in the "main bundle"
 /// - Parameter controller: The NSWindowController/subclass instance to manage the nib contents
 /// - Returns: A boolean which is true if successful, false otherwise
-public func loadWindowFromNib(_ nibName: String, owner controller: NSWindowController) -> Bool ***REMOVED***
+public func loadWindowFromNib(_ nibName: String, owner controller: NSWindowController) -> Bool {
 	var topLevelObjects: NSArray?
-	if (Bundle.main.loadNibNamed(NSNib.Name(nibName), owner: controller, topLevelObjects: &topLevelObjects)) ***REMOVED***
-		if let windows = ((topLevelObjects as? [Any])?.filter(***REMOVED***$0 is NSWindow***REMOVED***) as? [NSWindow]), windows.count > 0 ***REMOVED***
+	if (Bundle.main.loadNibNamed(NSNib.Name(nibName), owner: controller, topLevelObjects: &topLevelObjects)) {
+		if let windows = ((topLevelObjects as? [Any])?.filter({$0 is NSWindow}) as? [NSWindow]), windows.count > 0 {
 			controller.window = windows[0]
 			return true
-		***REMOVED***
-	***REMOVED***
+		}
+	}
 	return false
-***REMOVED***
+}
 
 
 /// Displays a view controller's content in the Playground's live view:
 /// - Parameter controller: an NSViewController/subclass which has been given a view to control
 /// - Parameter xi: a Boolean that determines whether the execution environment is allowed to continue indefinitely
-public func presentViewForController (_ controller: NSViewController, executeIndefinitely xi: Bool = true) ***REMOVED***
+public func presentViewForController (_ controller: NSViewController, executeIndefinitely xi: Bool = true) {
 	PlaygroundPage.current.liveView = controller
 	PlaygroundPage.current.needsIndefiniteExecution = xi
-***REMOVED***
+}
 
 
 /// Loads a nib file's contents, pairing windows and designated controllers and displaying the contents thereof:
@@ -58,18 +58,18 @@ public func presentViewForController (_ controller: NSViewController, executeInd
 /// 	2. assignes the object found as its window
 /// 	3. tells the controller to display the window
 /// 	4. adds the controller to the array of controllers to be returned to the user
-public func displayWindowsInNibWithControllerInstancessOfClass<W: NSWindowController>(_ nibFileName: String) -> [W] ***REMOVED***
+public func displayWindowsInNibWithControllerInstancessOfClass<W: NSWindowController>(_ nibFileName: String) -> [W] {
 	var windowControllers: [W] = []
 	var topLevelObjects: NSArray?
-	if (Bundle.main.loadNibNamed(NSNib.Name(nibFileName), owner: nil, topLevelObjects: &topLevelObjects)) ***REMOVED***
-		if let windows = ((topLevelObjects as? [Any])?.filter(***REMOVED***$0 is NSWindow***REMOVED***) as? [NSWindow]), windows.count > 0 ***REMOVED***
-			for win in windows ***REMOVED***
+	if (Bundle.main.loadNibNamed(NSNib.Name(nibFileName), owner: nil, topLevelObjects: &topLevelObjects)) {
+		if let windows = ((topLevelObjects as? [Any])?.filter({$0 is NSWindow}) as? [NSWindow]), windows.count > 0 {
+			for win in windows {
 				let controller = W()
 				controller.window = win
 				controller.showWindow(nil)
 				windowControllers.append(controller)
-			***REMOVED***
-		***REMOVED***
-	***REMOVED***
+			}
+		}
+	}
 	return windowControllers
-***REMOVED***
+}
