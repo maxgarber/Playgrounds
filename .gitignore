@@ -2,3 +2,4 @@
 xcuserdata
 pushover_config.json
 PushoverCredentials.json
+*.xctimeline

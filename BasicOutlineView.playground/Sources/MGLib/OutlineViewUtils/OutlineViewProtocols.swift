@@ -7,6 +7,7 @@ public protocol OutlineViewItem {
 	var name: String { get }
 	var image: NSImage? { get }
 	var children: [OutlineViewItem] { get }
+	var isGroup: Bool { get }
 }
 
 

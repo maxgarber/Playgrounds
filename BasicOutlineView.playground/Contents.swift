@@ -7,28 +7,28 @@ import PlaygroundSupport
 let nib = "MyView"
 var ovc = MGOutlineViewController()
 
-var chaos = MGOutlineViewItem("Chaos")
-chaos.image = NSImage.init(named: NSImage.advancedName)
-chaos.children.append(MGOutlineViewItem("Tartarus"))
-chaos.children.append(MGOutlineViewItem("Eros"))
-chaos.children.append(MGOutlineViewItem("Erebus"))
+var planets = MGOutlineViewItem.makeGroup("Planets")
 
-var gaea = MGOutlineViewItem("Gaea")
-gaea.image = NSImage.init(named: NSImage.networkName)
-chaos.children.append(gaea)
+guard let folderIcon = NSImage(named: NSImage.folderName) else { fatalError() }
+guard let userIcon = NSImage(named: NSImage.userName) else { fatalError() }
+guard let otherIcon = NSImage(named: NSImage.statusAvailableName) else { fatalError() }
 
-var uranus = MGOutlineViewItem("Uranus")
-uranus.children.append(MGOutlineViewItem("Cyclope"))
-uranus.children.append(MGOutlineViewItem("Hecatonchires"))
-uranus.children.append(MGOutlineViewItem("Cronus+Rhea"))
-uranus.children.append(MGOutlineViewItem("Coeus+Phoebe"))
-uranus.children.append(MGOutlineViewItem("Oceanus+Tethys"))
-gaea.children.append(uranus)
-gaea.children.append(MGOutlineViewItem("Mountains"))
-gaea.children.append(MGOutlineViewItem("Pontus"))
+var innerPlanets = MGOutlineViewItem("Inner Planets", image: folderIcon)
+innerPlanets.children.append(MGOutlineViewItem("Mercury", image: userIcon))
+innerPlanets.children.append(MGOutlineViewItem("Venus", image: userIcon))
+innerPlanets.children.append(MGOutlineViewItem("Earth", image: userIcon))
+innerPlanets.children.append(MGOutlineViewItem("Mars", image: userIcon))
+planets.children.append(innerPlanets)
 
+var outerPlanets = MGOutlineViewItem("Outer Planets", image: folderIcon)
+outerPlanets.children.append(MGOutlineViewItem("Jupiter", image: userIcon))
+outerPlanets.children.append(MGOutlineViewItem("Saturn", image: userIcon))
+outerPlanets.children.append(MGOutlineViewItem("Uranus", image: userIcon))
+outerPlanets.children.append(MGOutlineViewItem("Neptune", image: userIcon))
+planets.children.append(outerPlanets)
 
-ovc.items.append(chaos)
+ovc.items.append(planets)
+
 loadViewFromNib(nib, withOwner: ovc)
 ovc.preferredContentSize = NSMakeSize(256, 768)
 presentViewForController(ovc)
