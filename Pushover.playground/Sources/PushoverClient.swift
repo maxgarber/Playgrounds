@@ -1,36 +1,36 @@
 import Foundation
 
-public struct PushoverClientCredentials ***REMOVED***
+public struct PushoverClientCredentials {
     public var userKey: String = ""
     public var appToken: String = ""
     
-    public init() ***REMOVED******REMOVED***
+    public init() {}
     
-    public init(key: String, token: String) ***REMOVED***
+    public init(key: String, token: String) {
         self.userKey = key
         self.appToken = token
-    ***REMOVED***
+    }
     
-    public func asHttpBodyString() -> String ***REMOVED***
+    public func asHttpBodyString() -> String {
         return "user=\(userKey)&token=\(appToken)".addingPercentEncoding(withAllowedCharacters:.urlHostAllowed)!
-    ***REMOVED***
-***REMOVED***
+    }
+}
 
 public typealias UnixTimestamp = UInt
 
-public enum PushoverMessagePriority: Int ***REMOVED***
+public enum PushoverMessagePriority: Int {
     case lowest     = -2
     case low        = -1
     case normal     =  0
     case high       =  1
     case emergency  =  2
     
-    public var defaultValue: PushoverMessagePriority ***REMOVED***
+    public var defaultValue: PushoverMessagePriority {
         return .normal
-    ***REMOVED***
-***REMOVED***
+    }
+}
 
-public enum PushoverNotificationSound ***REMOVED***
+public enum PushoverNotificationSound {
     case pushover
     case bike
     case bugle
@@ -53,9 +53,9 @@ public enum PushoverNotificationSound ***REMOVED***
     case echo
     case updown
     case none
-***REMOVED***
+}
 
-public struct PushoverMessage ***REMOVED***
+public struct PushoverMessage {
     public var message: String = ""
     public var title: String?
     public var url: URL?
@@ -64,16 +64,16 @@ public struct PushoverMessage ***REMOVED***
     public var timestamp: UnixTimestamp?
     public var sound: PushoverNotificationSound?
     
-    public func asHttpBodyString() -> String ***REMOVED***
+    public func asHttpBodyString() -> String {
         var httpBody = "message=\(message)"
-        if let title = title ***REMOVED*** httpBody += "&title=\(title)" ***REMOVED***
-        if let url = url ***REMOVED*** httpBody += "&url=\(url)" ***REMOVED***
-        if let urlTitle = urlTitle ***REMOVED*** httpBody += "&urlTitle=\(urlTitle)" ***REMOVED***
-        if let priority = priority ***REMOVED*** httpBody += "&priority=\(priority)" ***REMOVED***
-        if let timestamp = timestamp ***REMOVED*** httpBody += "&timestamp=\(timestamp)" ***REMOVED***
-        if let sound = sound ***REMOVED*** httpBody += "&sound=\(sound)" ***REMOVED***
+        if let title = title { httpBody += "&title=\(title)" }
+        if let url = url { httpBody += "&url=\(url)" }
+        if let urlTitle = urlTitle { httpBody += "&urlTitle=\(urlTitle)" }
+        if let priority = priority { httpBody += "&priority=\(priority)" }
+        if let timestamp = timestamp { httpBody += "&timestamp=\(timestamp)" }
+        if let sound = sound { httpBody += "&sound=\(sound)" }
         return httpBody.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
-    ***REMOVED***
+    }
     
     public init(message msg: String = "",
                 title: String? = nil,
@@ -82,35 +82,35 @@ public struct PushoverMessage ***REMOVED***
                 priority: PushoverMessagePriority? = nil,
                 timestamp: UnixTimestamp? = nil,
                 sound: PushoverNotificationSound? = nil
-    ) ***REMOVED***
+    ) {
         message = msg
-        if let title = title ***REMOVED*** self.title = title ***REMOVED***
-        if let url = url ***REMOVED*** self.url = url ***REMOVED***
-        if let urlTitle = urlTitle ***REMOVED*** self.urlTitle = urlTitle ***REMOVED***
-        if let priority = priority ***REMOVED*** self.priority = priority ***REMOVED***
-        if let timestamp = timestamp ***REMOVED*** self.timestamp = timestamp ***REMOVED***
-        if let sound = sound ***REMOVED*** self.sound = sound ***REMOVED***
-    ***REMOVED***
-***REMOVED***
+        if let title = title { self.title = title }
+        if let url = url { self.url = url }
+        if let urlTitle = urlTitle { self.urlTitle = urlTitle }
+        if let priority = priority { self.priority = priority }
+        if let timestamp = timestamp { self.timestamp = timestamp }
+        if let sound = sound { self.sound = sound }
+    }
+}
 
-public enum APIError: Error ***REMOVED***
+public enum APIError: Error {
     case statusCode(Int)
     case other(Error)
     case unknown
-***REMOVED***
+}
 
 
-public class PushoverClient ***REMOVED***
+public class PushoverClient {
     public static let baseURL = URL(string:"https://api.pushover.net/1")!
     public static let sendMessageURL = baseURL.appendingPathComponent("/messages.json", isDirectory: false)
     
     public var credentials: PushoverClientCredentials
     
-    public init(withCredentials creds: PushoverClientCredentials) ***REMOVED***
+    public init(withCredentials creds: PushoverClientCredentials) {
         credentials = creds
-    ***REMOVED***
+    }
     
-    public func send(message: PushoverMessage, onSuccess: @escaping (Data)->Void, onError: @escaping (Error)->Void) ***REMOVED***
+    public func send(message: PushoverMessage, onSuccess: @escaping (Data)->Void, onError: @escaping (Error)->Void) {
         var sendMessageRequest = URLRequest(url: PushoverClient.sendMessageURL)
         sendMessageRequest.httpMethod = "POST"
         sendMessageRequest.httpBody = (
@@ -118,16 +118,16 @@ public class PushoverClient ***REMOVED***
             message.asHttpBodyString()
         ).data(using: .utf8)
         
-        let sendMessageTask = URLSession.shared.dataTask(with: sendMessageRequest) ***REMOVED*** data, response, error in
-            guard let data = data, let response = response as? HTTPURLResponse, error == nil else ***REMOVED***
+        let sendMessageTask = URLSession.shared.dataTask(with: sendMessageRequest) { data, response, error in
+            guard let data = data, let response = response as? HTTPURLResponse, error == nil else {
                 return onError(error ?? APIError.unknown)
-            ***REMOVED***
-            guard (200 ... 299) ~= response.statusCode else ***REMOVED***
+            }
+            guard (200 ... 299) ~= response.statusCode else {
                 return onError(APIError.statusCode(response.statusCode))
-            ***REMOVED***
+            }
             onSuccess(data)
-        ***REMOVED***
+        }
         sendMessageTask.resume()
-    ***REMOVED***
+    }
     
-***REMOVED***
+}
